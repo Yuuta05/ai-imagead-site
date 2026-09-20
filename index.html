@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-ImageAD Mobile: check images and documents on your phone</title>
+<meta name="description" content="AI-ImageAD Mobile is an Android app that checks images for signs of AI generation and documents for signs of digital tampering. Analysis runs on your phone.">
+<meta name="theme-color" content="#071a1d">
+<meta property="og:title" content="AI-ImageAD Mobile">
+<meta property="og:description" content="Check images for signs of AI generation and documents for signs of tampering, right on your Android phone.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%2314294a'/%3E%3Crect x='11' y='8' width='14' height='18' rx='2' fill='none' stroke='%23eaf6f4' stroke-width='1.8'/%3E%3Ccircle cx='24' cy='24' r='6' fill='%2314294a' stroke='%2338e1d1' stroke-width='2'/%3E%3Cline x1='28.4' y1='28.4' x2='33' y2='33' stroke='%2338e1d1' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #071a1d;
+  --ink-2: #0a2125;
+  --panel: #0f2c31;
+  --line: #1f464c;
+  --text: #eaf6f4;
+  --muted: #a3bdba;
+  --accent: #38e1d1;
+  --warn: #f0b45f;
+  --wrap: 1120px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--text);
+  font: 400 1.0625rem/1.6 'Instrument Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 {
+  margin: 0;
+  font-family: 'Bricolage Grotesque', 'Instrument Sans', system-ui, sans-serif;
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: #f6fdfc;
+}
+h2 { font-size: clamp(2rem, 4.2vw, 3.1rem); }
+h3 { font-size: 1.4rem; font-weight: 600; letter-spacing: -0.01em; }
+p { margin: 0; }
+a { color: inherit; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+
+.wrap { width: min(var(--wrap), 100% - 48px); margin-inline: auto; }
+.skip { position: absolute; left: -999px; top: 8px; background: var(--accent); color: #031012; padding: 10px 16px; border-radius: 8px; z-index: 10; }
+.skip:focus { left: 8px; }
+.lede { color: var(--muted); font-size: 1.125rem; max-width: 60ch; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 52px; padding: 0 28px; border-radius: 12px;
+  font-weight: 600; font-size: 1.0625rem; text-decoration: none;
+  border: 1px solid transparent; transition: opacity .15s ease, border-color .15s ease;
+}
+.btn-primary { background: var(--accent); color: #031012; }
+.btn-primary:hover { opacity: .88; }
+.btn-ghost { border-color: rgba(234,246,244,.3); color: var(--text); }
+.btn-ghost:hover { border-color: var(--text); }
+.btn-small { min-height: 44px; padding: 0 20px; border-radius: 10px; font-size: 1rem; }
+
+/* Header */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 20px 0; }
+.brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 1.25rem; color: #f6fdfc; }
+.nav { display: flex; align-items: center; gap: 28px; }
+.nav a:not(.btn) { display: inline-flex; align-items: center; min-height: 44px; color: var(--muted); text-decoration: none; }
+.nav a:not(.btn):hover { color: #fff; }
+
+/* Hero */
+.hero { padding: 48px 0 104px; }
+.hero .wrap { display: grid; grid-template-columns: 1.15fr .85fr; gap: 64px; align-items: center; }
+.hero h1 { font-size: clamp(2.7rem, 6.4vw, 5rem); }
+.hero .lede { margin-top: 24px; font-size: 1.25rem; max-width: 34ch; }
+.cta-row { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 36px; }
+.hero-note { margin-top: 20px; color: var(--muted); font-size: .95rem; }
+
+/* Phone mockup: the scan line is the one moving thing on the page */
+.phone-wrap { display: flex; justify-content: center; }
+.phone {
+  width: min(300px, 78vw); aspect-ratio: 300 / 620;
+  padding: 11px; border-radius: 42px;
+  background: #0b1a1d; border: 1px solid rgba(234,246,244,.22);
+}
+.screen { height: 100%; border-radius: 32px; background: #050f11; padding: 20px 16px; display: flex; flex-direction: column; gap: 14px; }
+.screen-head { display: flex; align-items: center; justify-content: space-between; font-size: .8rem; color: var(--muted); }
+.screen-head strong { color: #f6fdfc; font-size: .95rem; }
+.shot { position: relative; flex: 1 1 auto; min-height: 0; border-radius: 20px; background: #12282c; overflow: hidden; }
+.shot svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.corner { position: absolute; width: 24px; height: 24px; border: 0 solid var(--accent); }
+.corner.tl { top: 12px; left: 12px; border-top-width: 2px; border-left-width: 2px; border-top-left-radius: 6px; }
+.corner.tr { top: 12px; right: 12px; border-top-width: 2px; border-right-width: 2px; border-top-right-radius: 6px; }
+.corner.bl { bottom: 12px; left: 12px; border-bottom-width: 2px; border-left-width: 2px; border-bottom-left-radius: 6px; }
+.corner.br { bottom: 12px; right: 12px; border-bottom-width: 2px; border-right-width: 2px; border-bottom-right-radius: 6px; }
+.scanline {
+  position: absolute; left: 0; right: 0; top: 50%; height: 2px;
+  background: var(--accent); box-shadow: 0 0 14px var(--accent);
+  animation: sweep 4.6s ease-in-out infinite;
+}
+@keyframes sweep { 0%, 100% { top: 8%; } 50% { top: 92%; } }
+.screen-card { border-radius: 14px; background: var(--panel); padding: 14px; display: grid; gap: 10px; font-size: .85rem; }
+.screen-card strong { color: #f6fdfc; font-weight: 600; }
+.bar { height: 6px; border-radius: 3px; background: #1a3a3f; }
+.bar i { display: block; height: 6px; border-radius: 3px; background: var(--accent); }
+.screen-btn { border: 1px solid rgba(234,246,244,.22); border-radius: 12px; padding: 12px; text-align: center; font-size: .85rem; color: var(--muted); }
+
+/* Sections */
+.sec { padding: 104px 0; border-top: 1px solid var(--line); }
+.sec-alt { background: var(--ink-2); }
+.sec-head { display: grid; gap: 16px; margin-bottom: 56px; max-width: 760px; }
+
+/* Features */
+.detectors { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.panel { background: var(--panel); border-radius: 28px; padding: 40px; display: grid; gap: 16px; align-content: start; }
+.panel p { color: var(--muted); }
+.panel ul { display: grid; gap: 8px; margin-top: 8px; color: var(--text); font-size: 1rem; }
+.panel li { padding-left: 22px; position: relative; }
+.panel li::before { content: ""; position: absolute; left: 0; top: .68em; width: 10px; height: 2px; background: var(--accent); }
+.rows { margin-top: 56px; }
+.row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 32px; padding: 28px 0; border-top: 1px solid var(--line); }
+.row:last-child { border-bottom: 1px solid var(--line); }
+.row p { color: var(--muted); max-width: 60ch; }
+
+/* Steps: a real sequence, so numbered */
+.steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px; counter-reset: step; }
+.steps li { counter-increment: step; display: grid; gap: 12px; align-content: start; }
+.steps li::before {
+  content: counter(step);
+  font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 3.5rem; line-height: 1; color: var(--accent);
+}
+.steps p { color: var(--muted); }
+
+/* Security */
+.split { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 80px; align-items: start; }
+.split .sec-head { margin-bottom: 0; }
+.split .rows { margin-top: 0; }
+.split .row { grid-template-columns: 1fr; gap: 8px; padding: 22px 0; }
+
+/* Accuracy */
+.stats { display: grid; gap: 0; }
+.stat { display: grid; grid-template-columns: auto 1fr; gap: 8px 28px; align-items: baseline; padding: 24px 0; border-top: 1px solid var(--line); }
+.stat:last-child { border-bottom: 1px solid var(--line); }
+.stat .num { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(2.4rem, 5vw, 3.6rem); line-height: 1; color: var(--accent); }
+.stat .what { font-weight: 600; color: #f6fdfc; }
+.stat .detail { grid-column: 2; color: var(--muted); font-size: .98rem; }
+.limits { border: 1px solid rgba(240,180,95,.45); border-radius: 24px; padding: 32px; display: grid; gap: 16px; align-content: start; }
+.limits h3 { color: var(--warn); font-size: 1.15rem; }
+.limits li { padding-left: 22px; position: relative; color: #d8e7e5; }
+.limits li::before { content: ""; position: absolute; left: 0; top: .68em; width: 10px; height: 2px; background: var(--warn); }
+.limits ul { display: grid; gap: 14px; }
+.closing { margin-top: 56px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: clamp(1.4rem, 3vw, 2rem); line-height: 1.25; max-width: 30ch; color: #f6fdfc; }
+
+/* Download */
+.install { counter-reset: inst; }
+.install li { counter-increment: inst; display: grid; grid-template-columns: 44px 1fr; gap: 4px 16px; padding: 22px 0; border-top: 1px solid var(--line); }
+.install li:last-child { border-bottom: 1px solid var(--line); }
+.install li::before { content: counter(inst); grid-row: span 2; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 1.6rem; color: var(--accent); line-height: 1.2; }
+.install b { font-family: 'Bricolage Grotesque', sans-serif; font-size: 1.2rem; font-weight: 600; color: #f6fdfc; }
+.install span { color: var(--muted); }
+.dl-copy { display: grid; gap: 20px; align-content: start; }
+
+/* Footer */
+.foot { padding: 48px 0 56px; border-top: 1px solid var(--line); background: #050f11; }
+.foot .wrap { display: grid; gap: 28px; }
+.foot-top { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 24px; }
+.foot-links { display: flex; flex-wrap: wrap; gap: 8px 28px; }
+.foot-links a { display: inline-flex; align-items: center; min-height: 44px; color: var(--muted); text-decoration: none; }
+.foot-links a:hover { color: #fff; }
+.foot small { color: #8fa9a6; font-size: .9rem; line-height: 1.5; max-width: 70ch; }
+
+/* Responsive */
+@media (max-width: 960px) {
+  .hero .wrap { grid-template-columns: 1fr; gap: 56px; }
+  .split { grid-template-columns: 1fr; gap: 40px; }
+  .steps { grid-template-columns: 1fr; gap: 36px; }
+  .detectors { grid-template-columns: 1fr; }
+  .row { grid-template-columns: 1fr; gap: 8px; }
+  .sec { padding: 80px 0; }
+}
+@media (max-width: 720px) {
+  .nav a:not(.btn) { display: none; }
+  .panel { padding: 28px; }
+  .hero { padding-bottom: 72px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .scanline { animation: none; top: 50%; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#features">Skip to content</a>
+
+<header class="wrap top">
+  <a class="brand" href="#top" id="top">
+    <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="#14294a"/><rect x="11" y="8" width="14" height="18" rx="2" fill="none" stroke="#eaf6f4" stroke-width="1.8"/><line x1="14" y1="13" x2="22" y2="13" stroke="#eaf6f4" stroke-width="1.6"/><line x1="14" y1="17" x2="20" y2="17" stroke="#eaf6f4" stroke-width="1.6"/><circle cx="24" cy="24" r="6" fill="#14294a" stroke="#38e1d1" stroke-width="2"/><line x1="28.4" y1="28.4" x2="33" y2="33" stroke="#38e1d1" stroke-width="2.4" stroke-linecap="round"/></svg>
+    AI-ImageAD Mobile
+  </a>
+  <nav class="nav" aria-label="Main">
+    <a href="#features">Features</a>
+    <a href="#how">How it works</a>
+    <a href="#security">Security</a>
+    <a href="#accuracy">Accuracy</a>
+    <a class="btn btn-primary btn-small" href="#download">Download</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <h1>Check if it&rsquo;s real before you trust it.</h1>
+        <p class="lede">AI-ImageAD Mobile checks images for signs of AI generation and documents for signs of digital tampering, right on your Android phone.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#download" data-apk>Download the APK</a>
+          <a class="btn btn-ghost" href="#how">See how it works</a>
+        </div>
+        <p class="hero-note">Free beta for Android. Your images are analyzed on your phone.</p>
+      </div>
+      <div class="phone-wrap" aria-hidden="true">
+        <div class="phone">
+          <div class="screen">
+            <div class="screen-head"><strong>Scan</strong><span>Analyzing</span></div>
+            <div class="shot">
+              <svg viewBox="0 0 260 340" preserveAspectRatio="xMidYMid slice"><rect width="260" height="340" fill="#12282c"/><circle cx="188" cy="82" r="40" fill="#24494f"/><circle cx="40" cy="300" r="120" fill="#0d3a3f"/><circle cx="220" cy="330" r="110" fill="#1a4a52"/></svg>
+              <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+              <span class="scanline"></span>
+            </div>
+            <div class="screen-card">
+              <strong>Analyzing on your device</strong>
+              <div class="bar"><i style="width:100%"></i></div>
+              <div class="bar"><i style="width:66%"></i></div>
+              <div class="bar"><i style="width:24%"></i></div>
+            </div>
+            <div class="screen-btn">Scan another photo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="features">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Two detectors, and a way to see why.</h2>
+        <p class="lede">Check photos for signs of AI generation and documents for signs of digital editing. Every result shows what influenced it.</p>
+      </div>
+      <div class="detectors">
+        <div class="panel">
+          <h3>AI-generated image detection</h3>
+          <p>Pick a photo from your gallery, camera, or downloads. A MobileNetV2 model estimates whether an AI generator made it.</p>
+          <ul>
+            <li>Works on photos, screenshots, and shared images</li>
+            <li>Result shows a verdict and a confidence score</li>
+            <li>Adjustable sensitivity</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>Tampered document detection</h3>
+          <p>Upload an image or PDF. Error Level Analysis and a CNN look for signs of digital splicing in scanned documents and receipts.</p>
+          <ul>
+            <li>Accepts images and PDFs</li>
+            <li>Heatmap of areas with unusual compression</li>
+            <li>Adjustable sensitivity</li>
+          </ul>
+        </div>
+      </div>
+      <ul class="rows">
+        <li class="row">
+          <h3>&ldquo;Why this result?&rdquo;</h3>
+          <p>The app masks parts of the image and re-runs the model to show which regions pushed the verdict the most, in plain language.</p>
+        </li>
+        <li class="row">
+          <h3>Scan from anywhere</h3>
+          <p>Get a &ldquo;Scan this screenshot?&rdquo; prompt right after you take a screenshot, or share an image from Facebook or Messenger straight into the app.</p>
+        </li>
+        <li class="row">
+          <h3>History and PDF reports</h3>
+          <p>Every scan is saved to an encrypted history on your phone. Export a PDF report that includes the model version and its accuracy.</p>
+        </li>
+        <li class="row">
+          <h3>Tell us when it&rsquo;s wrong</h3>
+          <p>Tap &ldquo;This result is wrong&rdquo; to send a small copy of that image to help improve the model. The app asks you to confirm first.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec sec-alt" id="how">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>From suspicious to sorted in three steps.</h2>
+      </div>
+      <ol class="steps">
+        <li>
+          <h3>Pick or share</h3>
+          <p>Choose a photo or document, or share one to AI-ImageAD from another app.</p>
+        </li>
+        <li>
+          <h3>Analyze on your phone</h3>
+          <p>The models run on your device, so your image isn&rsquo;t uploaded to be analyzed.</p>
+        </li>
+        <li>
+          <h3>Review the result</h3>
+          <p>Get a verdict, a confidence score, and a look at what influenced it.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec" id="security">
+    <div class="wrap split">
+      <div class="sec-head">
+        <h2>Your photos and documents are personal.</h2>
+        <p class="lede">Before you scan anything, the app explains what it accesses, why, and how it&rsquo;s stored, then asks for your consent. You can decline, and you can withdraw consent later.</p>
+      </div>
+      <ul class="rows">
+        <li class="row">
+          <h3>Email code on every sign-in</h3>
+          <p>A 6-digit code is sent to your email each time you log in with email or Google.</p>
+        </li>
+        <li class="row">
+          <h3>Alerts for new sign-ins</h3>
+          <p>You get an email whenever your account signs in, so you can spot activity that isn&rsquo;t yours.</p>
+        </li>
+        <li class="row">
+          <h3>Lockout after failed attempts</h3>
+          <p>Five wrong passwords lock that email address for five minutes.</p>
+        </li>
+        <li class="row">
+          <h3>Encrypted history on your phone</h3>
+          <p>Your scan history stays on your device, encrypted with AES-256 (SQLCipher).</p>
+        </li>
+        <li class="row">
+          <h3>Nothing uploaded automatically</h3>
+          <p>Analysis runs on your device. An image is sent only if you tap &ldquo;This result is wrong&rdquo; and confirm.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec sec-alt" id="accuracy">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Honest about what it can and can&rsquo;t do.</h2>
+        <p class="lede">These are the accuracy figures from testing the models. Real-world results can differ.</p>
+      </div>
+      <div class="split">
+        <div class="stats">
+          <div class="stat">
+            <p class="num">86.91%</p>
+            <p class="what">AI-image model</p>
+            <p class="detail">Validation accuracy on 8,447 images.</p>
+          </div>
+          <div class="stat">
+            <p class="num">79.47%</p>
+            <p class="what">Document model</p>
+            <p class="detail">Validation accuracy on forgery data.</p>
+          </div>
+        </div>
+        <div class="limits">
+          <h3>Known limitations</h3>
+          <ul>
+            <li>Posed, well-lit portraits can score falsely high as AI-generated.</li>
+            <li>Newer generators, such as Midjourney v6 or Flux, may not be caught reliably.</li>
+            <li>Document analysis finds digital splicing artifacts. It can&rsquo;t tell whether a document&rsquo;s contents are true.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="closing">A result is a probability, not proof. Use it as one signal, not the final word.</p>
+    </div>
+  </section>
+
+  <section class="sec" id="download">
+    <div class="wrap split">
+      <div class="dl-copy">
+        <h2>Install the beta on Android.</h2>
+        <p class="lede">AI-ImageAD Mobile isn&rsquo;t on Google Play. You install it directly from an APK file.</p>
+        <div><a class="btn btn-primary" href="#download" data-apk>Download the APK</a></div>
+      </div>
+      <ol class="install">
+        <li><b>Download the APK</b><span>Tap the button and open the file when it finishes.</span></li>
+        <li><b>Allow installs from this source</b><span>Android asks you to turn on &ldquo;Install unknown apps&rdquo; for your browser or file manager.</span></li>
+        <li><b>Tap &ldquo;Install anyway&rdquo; if Play Protect warns you</b><span>This is a student capstone build, so Google Play hasn&rsquo;t verified it.</span></li>
+        <li><b>Sign up and verify</b><span>Create an account, enter the 6-digit code sent to your email, and review the privacy notice.</span></li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-top">
+      <div>
+        <div class="brand" style="pointer-events:none">AI-ImageAD Mobile</div>
+        <p style="color:var(--muted);margin-top:6px">A capstone project, BSIT, Our Lady of Lourdes College</p>
+      </div>
+      <nav class="foot-links" aria-label="Footer">
+        <a href="#features">Features</a>
+        <a href="#security">Security</a>
+        <a href="#accuracy">Accuracy</a>
+        <a href="#download">Download</a>
+      </nav>
+    </div>
+    <small>Beta build. Results are probabilistic and are not a substitute for professional verification.</small>
+  </div>
+</footer>
+
+<script>
+  // Paste your APK link between the quotes (Firebase App Distribution, Google Drive, a GitHub release, etc.).
+  // Every "Download the APK" button on the page will use it.
+  var APK_URL = "https://appdistribution.firebase.google.com/testerapps/1:38388116678:android:e979b96ac64ee7ebf93bc7/releases/5845nophnjgq8?utm_source=firebase-console";
+  if (APK_URL) {
+    document.querySelectorAll("[data-apk]").forEach(function (a) { a.href = APK_URL; });
+  }
+</script>
+</body>
+</html>
