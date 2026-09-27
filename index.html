@@ -166,7 +166,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .install span { color: var(--muted); }
 .dl-copy { display: grid; gap: 20px; align-content: start; }
 .qr-block { display: flex; align-items: center; gap: 16px; margin-top: 4px; }
-#qr-download { background: #fff; padding: 10px; border-radius: 14px; line-height: 0; flex-shrink: 0; }
+.qr-block img { background: #fff; padding: 10px; border-radius: 14px; display: block; }
 .qr-caption { color: var(--muted); font-size: .9rem; }
 
 /* Footer */
@@ -312,4 +312,121 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
         </li>
         <li>
           <h3>Review the result</h3>
-          <p>Get a verdict, a confidence score, and a look at what
+          <p>Get a verdict, a confidence score, and a look at what influenced it.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec" id="security">
+    <div class="wrap split">
+      <div class="sec-head">
+        <h2>Your photos and documents are personal.</h2>
+        <p class="lede">Before you scan anything, the app explains what it accesses, why, and how it&rsquo;s stored, then asks for your consent. You can decline, and you can withdraw consent later.</p>
+      </div>
+      <ul class="rows">
+        <li class="row">
+          <h3>Email code on every sign-in</h3>
+          <p>A 6-digit code is sent to your email each time you log in with email or Google.</p>
+        </li>
+        <li class="row">
+          <h3>Alerts for new sign-ins</h3>
+          <p>You get an email whenever your account signs in, so you can spot activity that isn&rsquo;t yours.</p>
+        </li>
+        <li class="row">
+          <h3>Lockout after failed attempts</h3>
+          <p>Five wrong passwords lock that email address for five minutes.</p>
+        </li>
+        <li class="row">
+          <h3>Encrypted history on your phone</h3>
+          <p>Your scan history stays on your device, encrypted with AES-256 (SQLCipher).</p>
+        </li>
+        <li class="row">
+          <h3>Nothing uploaded automatically</h3>
+          <p>Analysis runs on your device. An image is sent only if you tap &ldquo;This result is wrong&rdquo; and confirm.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec sec-alt" id="accuracy">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Honest about what it can and can&rsquo;t do.</h2>
+        <p class="lede">These are the accuracy figures from testing the models. Real-world results can differ.</p>
+      </div>
+      <div class="split">
+        <div class="stats">
+          <div class="stat">
+            <p class="num">86.91%</p>
+            <p class="what">AI-image model</p>
+            <p class="detail">Validation accuracy on 8,447 images.</p>
+          </div>
+          <div class="stat">
+            <p class="num">79.47%</p>
+            <p class="what">Document model</p>
+            <p class="detail">Validation accuracy on forgery data.</p>
+          </div>
+        </div>
+        <div class="limits">
+          <h3>Known limitations</h3>
+          <ul>
+            <li>Posed, well-lit portraits can score falsely high as AI-generated.</li>
+            <li>Newer generators, such as Midjourney v6 or Flux, may not be caught reliably.</li>
+            <li>Document analysis finds digital splicing artifacts. It can&rsquo;t tell whether a document&rsquo;s contents are true.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="closing">A result is a probability, not proof. Use it as one signal, not the final word.</p>
+    </div>
+  </section>
+
+  <section class="sec" id="download">
+    <div class="wrap split">
+      <div class="dl-copy">
+        <h2>Install the beta on Android.</h2>
+        <p class="lede">AI-ImageAD Mobile isn&rsquo;t on Google Play. You install it directly from an APK file.</p>
+        <div><a class="btn btn-primary" href="#download" data-apk>Download the APK</a></div>
+        <div class="qr-block">
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAAAAABcFtGpAAAFd0lEQVR42u3dPXbjNhSGYTLH57jKLpSKWkmq6bJNr8CrIDtvI4WmYSqBSgBfXdAjWXaer9KA+H0H4PmMA16M60BZ/QYBWGCBBRZYYEEAFlhggQXW/15P//rXsreat8P51xRlW4L8W9tT1J3p/exhi42u5nRZ/XqpeS+sQ7u+/yrKP0RJRXPd1VyLjaZzuqjMMvTOAgsssMAisMC6h4O/sGJ91SzHOm2s6yq/jlGLY5C0Ges11eLeATVaNLMsQ7DAAovAAgusr2hKd0f2yVnEte/Z/OERT6uZZRmCBRZYBBZYYD20Kd0CRHSGw3htHF4oSc9DVeupDnQx1QWHumAYBCPqRCP+RqhmrtsFwYiS5lSuqODcWTCmEP0ZIQiGdxZYYIEFFoEF1q013jUe/HZa+a14vupZ7H7PBae5LriaWZYhWGARWGCBBRZY311P17z2kPLHWxi7KLpc8hTIxw8dN1osSS3rP+RGa2ZZhmCBBRZYBBZY9zCly7HPi25OLxfp+OPbyjmtt8lvZlmGYIEFFlgEFlhgPZiD3+2BT2NfwZcp46fHzoLRXnj5sYypGmwrW4ZggQUWWAQWWJ9lSrdv8Rr7y9tHa+Vhyf5zrgs2vscr+f/8vco1Ry3+KD0s3xv+FeR6qbs612N8CQb0jl1Of28YfcQ3RXdn5y7dzt2dvft7wzVVMOy97w29s8ACCyywCCyw7uLgLzxZnRRtx4bbyrnYymHb9e0oh6jT4WllYewsQ7DAAovAAgusxzalU6cX7fV3jSv7ooMNjaQtNl5nUObdXV3NLMsQLLDAAovAAgush4W1jGe1bHFwBGErOKaqeI6qLzU0WiwFT1GLUSdaY4yGZmZZhmCBBRZYBBZYN1fHPdLRqYRpzeRqbSt3hoArx2fDWHDR7vghGtpqZlmGYIEFFlgEFlhgfRsHH9rit8CuNwpusSxy50GGqqHdRvx53dm0mWUZggUWWGARWGDdx5S2gmA0wlvUz8KCF5ay5J+qpJeS60fQ37/P+VthNxpG9ZjpzUXbV3z5tSAYnZEicg/nvouyGwOccv3a3VVBMLyzwAILLLAIrF9qSofiFU8laameNbQMQa6ldkmvkZGMwqP9nLqyb91Zav8cFmwO+1ootJxzm3PmLxpgzpTOe7saso3yM6XeWWCBBRZYBBZYd3bwrSPAY/WjZZSjoGhDlDQE1ecCV6x76wrPOrjwwzIECyywwCKwwALrMXV1Wzl1CiB5i0ZR48KPfN+u303S2fSaBGRmWYZggQUWWAQWWLfRuN6hjc3gBQ/XVBXzFFQ/ZOoKo2eYWZYhWGCBBRaBBRZYXwpWK0RySn9EEZUvzPZZ22nvOqJyGJR5qruaa9HMsgzBAgssAgsssB5XHfdIR1qOqWydR4Yb2cs90mE0595xNFp0ZZ9lCBZYYIFFYIH1Wab0rRH0YAlKT1HBokOjrqn6sekUNH2a3u9EWLDo9RD0Jgzm8W5kts6TvL1BMOboIHLU4u6Cjf+6xjiGaBxOK3tngQUWWGARWGB9e1hj37GE5FmH2lm+5LK3qjezLEOwwAILLAILLLA+XU+3q3p3LLloezh3MCR3b2CYSxg7yxAssMACi8AC65FM6cejZDTMXyOWRc5Izqnqd4eBji2ymWUZggUWWGARWGCB9bAOvjNoxCEy7g2nfFwyLY6df0akrmgJb4BZzSzLECywwAKLwALrE3SP2MpmFlgEFlhggQUWWAQWWJ+gfwBaRxqjK0q69gAAAABJRU5ErkJggg==" alt="QR code to download the AI-ImageAD Mobile APK" width="140" height="140">
+          <p class="qr-caption">Or scan with your phone&rsquo;s camera</p>
+        </div>
+      </div>
+      <ol class="install">
+        <li><b>Download the APK</b><span>Tap the button and open the file when it finishes.</span></li>
+        <li><b>Allow installs from this source</b><span>Android asks you to turn on &ldquo;Install unknown apps&rdquo; for your browser or file manager.</span></li>
+        <li><b>Tap &ldquo;Install anyway&rdquo; if Play Protect warns you</b><span>This is a student capstone build, so Google Play hasn&rsquo;t verified it.</span></li>
+        <li><b>Sign up and verify</b><span>Create an account, enter the 6-digit code sent to your email, and review the privacy notice.</span></li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-top">
+      <div>
+        <div class="brand" style="pointer-events:none">AI-ImageAD Mobile</div>
+        <p style="color:var(--muted);margin-top:6px">A capstone project, BSIT, Our Lady of Lourdes College</p>
+      </div>
+      <nav class="foot-links" aria-label="Footer">
+        <a href="#features">Features</a>
+        <a href="#security">Security</a>
+        <a href="#accuracy">Accuracy</a>
+        <a href="#download">Download</a>
+      </nav>
+    </div>
+    <small>Beta build. Results are probabilistic and are not a substitute for professional verification.</small>
+  </div>
+</footer>
+
+<script>
+  // Paste your APK link between the quotes (Firebase App Distribution, Google Drive, a GitHub release, etc.).
+  // Every "Download the APK" button on the page will use it.
+  var APK_URL = "https://github.com/Yuuta05/ai-imagead-site/releases/latest/download/AI-ImageAD-Mobile.apk";
+  if (APK_URL) {
+    document.querySelectorAll("[data-apk]").forEach(function (a) { a.href = APK_URL; });
+  }
+</script>
+</body>
+</html>
